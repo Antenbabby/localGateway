@@ -1,31 +1,38 @@
-/*
 package com.antennababy.localgateway.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableWebSecurity
 public class SpringSecurityConfig {
+    @Value("${spring.security.user.name}")
+    private String username;
+
+    @Value("${spring.security.user.password}")
+    private String password;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(authorize-> {
-                    try {
-                        authorize
-                                // 放行登录接口
-                                .requestMatchers("/api/auth/login").permitAll()
-                                // 放行资源目录
-                                .requestMatchers("/static/**", "/resources/**").permitAll()
-                                // 其余的都需要权限校验
-                                .anyRequest().authenticated()
-                                // 防跨站请求伪造
-                                .and().csrf(csrf -> csrf.disable());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-        ).build();
+        http.authorizeHttpRequests().requestMatchers("/**").hasRole("USER").and().formLogin();
+        return http.csrf(AbstractHttpConfigurer::disable).build();
+    }
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails user = User.withDefaultPasswordEncoder()
+                .username(username)
+                .password(password)
+                .roles("USER")
+                .build();
+        return new InMemoryUserDetailsManager(user);
     }
 }
-*/
