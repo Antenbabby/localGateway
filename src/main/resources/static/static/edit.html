@@ -22,9 +22,10 @@
 </div>
 <script src="./index_files/jquery.min.js"></script>
 <script src="editormd/editormd.min.js"></script>
+<script src="common.js"></script>
 <script type="text/javascript">
     $(function () {
-        $.get("/api/index.md", function (data) {
+        $.get(CONTEX+"/api/index.md", function (data) {
             $("#content").val(data);
         });
         var editor = editormd("test-editor", {
@@ -35,7 +36,7 @@
     });
 
     function submit() {
-        $.post("/api/update/index.md", {"content": $("#content").val()}, function (data) {
+        $.post(CONTEX+"/api/update/index.md", {"content": $("#content").val()}, function (data) {
             alert(data);
         });
     }

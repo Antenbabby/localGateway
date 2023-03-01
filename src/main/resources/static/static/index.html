@@ -9,6 +9,7 @@
     <script src="editormd/lib/marked.min.js"></script>
     <script src="editormd/lib/prettify.min.js"></script>
     <script src="editormd/lib/raphael.min.js"></script>
+    <script src="common.js"></script>
     <script src="editormd/lib/underscore.min.js"></script>
     <script src="editormd/lib/sequence-diagram.min.js"></script>
     <script src="editormd/lib/flowchart.min.js"></script>
@@ -26,7 +27,7 @@
     var testEditor;
 
     $(function () {
-        $.get("/api/index.md", function (data) {
+        $.get(CONTEX+"/api/index.md", function (data) {
             $("#content").val(data);
             testEditor = editormd.markdownToHTML("test-editormd", {
                 htmlDecode :"style, script, iframe",
