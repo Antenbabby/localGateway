@@ -1,7 +1,7 @@
 package com.antennababy.localgateway.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
