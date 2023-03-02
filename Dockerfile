@@ -1,4 +1,4 @@
-FROM jdk8:alpine
+FROM openjdk:8-jre-alpine
 RUN rm -f /etc/localtime \
 && ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 && echo "Asia/Shanghai" > /etc/timezoneVOLUME /tmp
