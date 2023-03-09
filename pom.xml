@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.antennababy</groupId>
-    <artifactId>localGateway</artifactId>
+    <artifactId>localgateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>localGateway</name>
     <description>localGateway</description>
