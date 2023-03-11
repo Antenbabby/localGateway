@@ -10,14 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
-import java.util.Optional;
 
-/**
- * 需要登录才能访问的控制器
- *
- * @author 黑龙江省瑜美科技发展有限公司
- * @since 2022-12-11
- */
+
 @RestController
 @RequestMapping("/api")
 @PreAuthorize("hasAuthority('ROLE_USER')")
@@ -25,11 +19,12 @@ public class ApiController {
 
     @Autowired
     MdFileRep mdFileRep;
-    @RequestMapping("/index.md")
-    public String index(){
-        return mdFileRep.findByFileName("index.md")==null?null:mdFileRep.findByFileName("index.md").getFileContent();
+    @RequestMapping("/getFile/{fileName}")
+    public String index(@PathVariable String fileName ){
+        MdFile byFileName = mdFileRep.findByFileName(fileName);
+        return byFileName==null?null:byFileName.getFileContent();
     }
-    @RequestMapping("/update/{fileName}")
+    @RequestMapping("/updateFile/{fileName}")
     @Transactional
     public String update(@PathVariable String fileName, String content){
         mdFileRep.deleteByFileName(fileName);
@@ -40,4 +35,5 @@ public class ApiController {
         mdFileRep.save(mdFile);
         return "success";
     }
+
 }

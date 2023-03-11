@@ -8,7 +8,7 @@
 <body>
 
 <div id="test-editormd" style="width: 90%;padding-left: 5%">
-    <a href="./index.html">首页</a>
+    <a id="homeBtn" href="./index.html">首页</a>
     <div class="pui-layout pui-layout-fixed pui-layout-fixed-1200 pui-layout-fixed-1360" style="height:830px">
         <div id="test-editor" style="height:850px;overflow: auto">
     <textarea id="content" style="display:none;">### 关于 Editor.md
@@ -25,7 +25,9 @@
 <script src="common.js"></script>
 <script type="text/javascript">
     $(function () {
-        $.get(CONTEX+"/api/index.md", function (data) {
+        $("#homeBtn").attr("href",'./index.html?file='+getFileName());
+
+        $.get(CONTEX+"/api/getFile/"+getFileName(), function (data) {
             $("#content").val(data);
         });
         var editor = editormd("test-editor", {
@@ -36,7 +38,7 @@
     });
 
     function submit() {
-        $.post(CONTEX+"/api/update/index.md", {"content": $("#content").val()}, function (data) {
+        $.post(CONTEX+"/api/updateFile/"+getFileName(), {"content": $("#content").val()}, function (data) {
             alert(data);
         });
     }

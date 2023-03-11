@@ -7,12 +7,7 @@
 //import java.util.ArrayList;
 //import java.util.List;
 //
-///**
-// * 登录测试
-// *
-// * @author 黑龙江省瑜美科技发展有限公司
-// * @since 2022-12-11
-// */
+//
 //@RestController
 //@RequestMapping("/api/auth")
 //public class LoginController {

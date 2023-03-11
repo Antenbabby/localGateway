@@ -19,7 +19,7 @@
 </head>
 <body>
 <div id="test-editormd" style="width: 90%;padding-left: 5%" >
-    <a href="./edit.html">编辑</a>
+    <a id="editbtn" href="./edit.html">编辑</a>
     <textarea id="content" style="display: none" name="test-editormd-markdown-doc"></textarea>
 </div>
 
@@ -27,7 +27,8 @@
     var testEditor;
 
     $(function () {
-        $.get(CONTEX+"/api/index.md", function (data) {
+        $("#editbtn").attr("href",'./edit.html?file='+getFileName());
+        $.get(CONTEX+"/api/getFile/"+getFileName(), function (data) {
             $("#content").val(data);
             testEditor = editormd.markdownToHTML("test-editormd", {
                 htmlDecode :"style, script, iframe",
