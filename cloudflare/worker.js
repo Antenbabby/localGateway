@@ -1,18 +1,17 @@
-let joinStats = false;  //可选加入统计。 加入统计不会收集任何隐私信息，仅统计访问量。
-let webPath = 'https://raw.githubusercontent.com/Antenbabby/localGateway/cloudflare/src/main/resources/static'; //web页面地址，可以修改成自己的仓库来自定义前端页面
-let serverConfig = {
-}
-let cookies = [
-    ""
-]
+const webPath = 'https://raw.githubusercontent.com/Antenbabby/localGateway/cloudflare/src/main/resources/static'; //web页面地址，可以修改成自己的仓库来自定义前端页面
+const setCache = (key, data) => DOCDATA.put(key, data)
+const getCache =( key,format) => DOCDATA.get(key, format)
 
+// export default {
+//     async fetch(request, _env) {
+//         return await handleRequest(request);
+//     }
+// }
 
-export default {
-    async fetch(request, _env) {
-        return await handleRequest(request);
-    }
-}
-let serverConfigString = JSON.stringify(serverConfig);
+addEventListener('fetch', event => {
+    event.respondWith(handleRequest(event.request))
+})
+
 /**
  * Respond to the request
  * @param {Request} request
@@ -21,17 +20,6 @@ async function handleRequest(request) {
     let url = new URL(request.url);
     let path = url.pathname;
 
-    //请求服务器配置
-    if(path==='/web/resource/config.json'){
-        return new Response(serverConfigString,{
-            status: 200,
-            statusText: 'ok',
-            headers: {
-                "content-type": "application/x-javascript; charset=utf-8",
-                "cache-control":"max-age=14400"
-            }
-        })
-    }
     if (path.startsWith("/static/")||path === "/favicon.ico") { //web请求
         let a = `${webPath}${path}`;
         return await goWeb(a);
@@ -77,47 +65,22 @@ async function goApi(path,request) {
 
         let method = matches[1];
         let pathVal = matches[2];
-        let bodyParam = readRequestBody(request);
-        console.log(method);
-        console.log(pathVal);
-        console.log(bodyParam);
         if(method==='getFile') {
             // 如果method是getFile，就返回文件内容
-            let fileText =  DOC_DATA.get(pathVal, {type: "text"});
+            let fileText =await  getCache(pathVal, {type: "text"});
             return retText(fileText);
         }else if(method==='updateFile'){
+            let bodyParam=await request.json();
             // updateFile方法用于更新文件内容
-            DOC_DATA.put(pathVal,bodyParam.content);
+            await setCache(pathVal,bodyParam.content);
             return retText("更新成功");
         }
-    }
-}
-function readRequestBody(request) {
-    const contentType = request.headers.get("content-type");
-    if (contentType.includes("application/json")) {
-        return JSON.stringify(request.json());
-    } else if (contentType.includes("application/text")) {
-        return request.text();
-    } else if (contentType.includes("text/html")) {
-        return request.text();
-    } else if (contentType.includes("form")) {
-        const formData = request.formData();
-        console.log(JSON.stringify(request));
-        const body = {};
-        for (const entry of formData.entries()) {
-            body[entry[0]] = entry[1];
-        }
-        return JSON.stringify(body);
-    } else {
-        // Perhaps some other type of data was submitted in the form
-        // like an image, or some other binary data.
-        return "a file";
     }
 }
 
 //返回文本内容
 function retText(text) {
-  return new Response(text, {
+    return new Response(text, {
         status: 200,
         statusText: 'ok',
         headers: {
