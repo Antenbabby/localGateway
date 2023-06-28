@@ -41,6 +41,15 @@
         $.post(CONTEX+"/api/updateFile/"+getFileName(), {"content": $("#content").val()}, function (data) {
             alert(data);
         });
+        $.ajax({
+            url: CONTEX+"/api/updateFile/"+getFileName(),
+            data: {"content": $("#content").val()},
+            type: "POST",
+            contentType: "application/json",
+            success: function (data) {
+                alert(data);
+            }
+        });
     }
 </script>
 </body>
